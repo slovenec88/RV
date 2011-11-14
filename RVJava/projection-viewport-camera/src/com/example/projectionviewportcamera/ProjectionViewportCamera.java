@@ -1,10 +1,17 @@
 package com.example.projectionviewportcamera;
 
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.AudioDevice;
+import com.badlogic.gdx.audio.AudioRecorder;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
@@ -19,6 +26,8 @@ public class ProjectionViewportCamera implements ApplicationListener {
     private Mesh mesh;
     private Mesh mesh2;
     private Camera camera;
+    Music music;
+    int m=0;
     
     int oddaljenost=3;
     static float z=3;
@@ -26,31 +35,6 @@ public class ProjectionViewportCamera implements ApplicationListener {
 
     @Override
     public void create() {
-        /*if (squareMesh == null) {
-            squareMesh = new Mesh(true, 4, 4, 
-                    new VertexAttribute(Usage.Position, 3, "a_position"),
-                    new VertexAttribute(Usage.ColorPacked, 4, "a_color"));
-
-            squareMesh.setVertices(new float[] {
-                    0, -0.5f, -4, Color.toFloatBits(128, 0, 0, 255),
-                    1, -0.5f, -4, Color.toFloatBits(192, 0, 0, 255),
-                    0, 0.5f, -4, Color.toFloatBits(192, 0, 0, 255),
-                    1, 0.5f, -4, Color.toFloatBits(255, 0, 0, 255) });   
-            squareMesh.setIndices(new short[] { 0, 1, 2, 3});
-        }
-
-        if (nearSquare == null) {
-            nearSquare = new Mesh(true, 4, 4, 
-                    new VertexAttribute(Usage.Position, 3, "a_position"),
-                    new VertexAttribute(Usage.ColorPacked, 4, "a_color"));
-
-            nearSquare.setVertices(new float[] {
-                    -1, -0.5f, -1.1f, Color.toFloatBits(0, 0, 128, 255),
-                    0, -0.5f, -1.1f, Color.toFloatBits(0, 0, 192, 255),
-                    -1, 0.5f, -1.1f, Color.toFloatBits(0, 0, 192, 255),
-                    0, 0.5f, -1.1f, Color.toFloatBits(0, 0, 255, 255) });   
-            nearSquare.setIndices(new short[] { 0, 1, 2, 3});
-        }*/
     	
     	if (mesh == null) {
             mesh = new Mesh(true, 3, 3, 
@@ -88,7 +72,10 @@ public class ProjectionViewportCamera implements ApplicationListener {
     }
         
     @Override
-    public void dispose() { }
+    public void dispose() { 
+    	music.dispose();
+    	
+    }
 
     @Override
     public void pause() { }
@@ -104,25 +91,14 @@ public class ProjectionViewportCamera implements ApplicationListener {
             movementIncrement = -movementIncrement;
             total = -200;
         }
-        /*
-        camera.rotate(movementIncrement * 20, 0, 1, 0);
-        camera.translate(movementIncrement, 0, movementIncrement);
-        camera.update();
-        camera.apply(Gdx.gl10);
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-        squareMesh.render(GL10.GL_TRIANGLE_STRIP, 0, 4);
-        mesh.render(GL10.GL_TRIANGLES, 0, 4);
-        nearSquare.render(GL10.GL_TRIANGLE_STRIP, 0, 4);*/
         int i=0;
-        
-        
-        //camera.position.set(position);
         
         
         
         if(Gdx.input.isKeyPressed(Keys.KEYCODE_DPAD_RIGHT)) {
         	i++;
         	camera.rotate(i, 0, 1, 0);
+        	
         }
         	
         if(Gdx.input.isKeyPressed(Keys.KEYCODE_DPAD_LEFT)) {
@@ -137,6 +113,16 @@ public class ProjectionViewportCamera implements ApplicationListener {
         	z=z-0.08f;
         	camera.position.set(0,0,z);
         }
+        if(Gdx.input.isKeyPressed(Keys.KEYCODE_P)) {
+        	 spilaj();
+        	 m=1;
+        }
+        
+        if(Gdx.input.isKeyPressed(Keys.KEYCODE_O)){
+        		pavza();
+        }
+        //lookat
+       
  
         //camera.translate(i, 0, i);
         camera.update();
@@ -152,9 +138,67 @@ public class ProjectionViewportCamera implements ApplicationListener {
         float aspectRatio = (float) width / (float) height;
         camera = new PerspectiveCamera(67, 2f * aspectRatio, 2f);
         //camera = new OrthographicCamera(67, 2f * aspectRatio);
+        Audio a = new Audio() {
+			
+			@Override
+			public Sound newSound(FileHandle fileHandle) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Music newMusic(FileHandle file) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public AudioRecorder newAudioRecoder(int samplingRate, boolean isMono) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public AudioDevice newAudioDevice(boolean isMono) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+		/*FileHandle b;
+		b = "";
+		a.newMusic(asd.);*/
+		
+		
+    }
+    
+    public void spilaj(){
+    	if (m==0)
+    		music = Gdx.audio.newMusic(Gdx.files.absolute("C:\\StariZenin.mp3"));
+    	music.play();
+    	
+    	
+    }
+    
+    public void pavza(){
+    	music.pause();
     }
 
     @Override
     public void resume() { }
+    
+    FileHandle asd = new FileHandle() {
+		
+		@Override
+		public FileHandle parent() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public FileHandle child(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	};
 }
 
